@@ -13,6 +13,9 @@ export class GatewayService {
   constructor(@InjectModel('Gateway') private readonly gatewayModel: Model<Gateway>, private readonly deviceService: DeviceService) { }
 
   async create(createGatewayDto: CreateGatewayDto) {
+    const foundGateway = await this.gatewayModel.findOne({ serial: createGatewayDto.serial })
+    if (foundGateway) throw new BadRequestException({ message: 'a gateway with the same serial already exists' })
+
     const newGateway = await this.gatewayModel.create({
       ...createGatewayDto
     })
@@ -32,6 +35,12 @@ export class GatewayService {
   async update(id: string, updateGatewayDto: UpdateGatewayDto): Promise<Gateway> {
     const foundGateway = await this.gatewayModel.findById(id);
     if (!foundGateway) throw new NotFoundException({ message: 'No gateway found with this id' })
+
+
+    if (updateGatewayDto.serial !== undefined && foundGateway.serial !== updateGatewayDto.serial) {
+      const sameSerialFound = await this.gatewayModel.findOne({ serial: updateGatewayDto.serial })
+      if (sameSerialFound) throw new BadRequestException({ message: 'a gateway with the same serial already exists' })
+    }
 
     const updatedModel = await this.gatewayModel.updateOne({ _id: new mongoose.Types.ObjectId(id) }, {
       ...updateGatewayDto
@@ -87,5 +96,9 @@ export class GatewayService {
     })
 
     if (!updatedGateway) throw new BadRequestException({ message: 'Error removing device from gateway' })
+  }
+
+  async findGatewayContainingDevice(deviceId: string) {
+    return await this.gatewayModel.find({ devices: new mongoose.Types.ObjectId(deviceId) }).lean();
   }
 }

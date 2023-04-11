@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, BadRequestException } from '@nestjs/common';
 import { GatewayService } from './gateway.service';
 import { CreateGatewayDto } from './dto/create-gateway.dto';
 import { UpdateGatewayDto } from './dto/update-gateway.dto';
 import { CreateDeviceDto } from 'src/device/dto/create-device.dto';
+import { isIPv4 } from 'net';
 
 @Controller('v1/api/gateway')
 export class GatewayController {
@@ -10,6 +11,8 @@ export class GatewayController {
 
   @Post()
   create(@Body() createGatewayDto: CreateGatewayDto) {
+    const ip = createGatewayDto.IPv4;
+    if (!isIPv4(ip)) throw new BadRequestException({ message: 'Invalid IP v4 inserted' })
     return this.gatewayService.create(createGatewayDto);
   }
 

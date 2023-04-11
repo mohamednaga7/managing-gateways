@@ -1,0 +1,17 @@
+version: '3'
+services:
+  api:
+    build:
+      context: ./api
+    container_name: gateways-manager-api
+    ports:
+      - 4004:4004
+    env_file: ./api/.env
+
+  client:
+    build:
+      context: ./client
+    container_name: gateways-manager-client
+    ports:
+      - 3000:3000
+    env_file: ./client/.env

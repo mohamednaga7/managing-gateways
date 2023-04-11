@@ -31,6 +31,7 @@ export const DeviceSchema = new mongoose.Schema({
 
 
 export interface Device {
+  _id: string,
   UID: string,
   vendor: string,
   createdAt: Date,

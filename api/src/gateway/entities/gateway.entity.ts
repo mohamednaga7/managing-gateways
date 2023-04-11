@@ -25,7 +25,7 @@ export const GatewaySchema = new mongoose.Schema({
 })
 
 export interface Gateway {
-  id: string,
+  _id: string,
   serial: string,
   name: string,
   IPv4: string,

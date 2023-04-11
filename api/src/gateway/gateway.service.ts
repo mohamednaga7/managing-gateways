@@ -79,6 +79,9 @@ export class GatewayService {
     const gateway = await this.findOne(gatewayId);
     const device = await this.deviceService.findOne(deviceId)
 
+    const foundDeviceInGatewayDevices = gateway.devices.find((d) => d._id.toString() === device._id.toString())
+    if (foundDeviceInGatewayDevices) return device;
+
     const updatedGateway = await this.gatewayModel.updateOne({ _id: gateway._id }, {
       $push: { devices: device._id }
     })

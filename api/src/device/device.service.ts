@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
 import { CreateDeviceDto } from './dto/create-device.dto';
@@ -12,6 +12,9 @@ export class DeviceService {
   constructor(@InjectModel('Device') private readonly deviceModel: Model<Device>) { }
 
   async create(createDeviceDto: CreateDeviceDto) {
+    const foundDevice = await this.deviceModel.findOne({ UID: createDeviceDto.UID }).lean()
+    if (foundDevice) throw new BadRequestException({ message: 'a device with the same UID exists' })
+
     return await this.deviceModel.create({ ...createDeviceDto, status: 'ONLINE' })
   }
 

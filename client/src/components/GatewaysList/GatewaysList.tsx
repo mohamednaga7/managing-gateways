@@ -31,7 +31,7 @@ export const GatewaysList: React.FC<GatewaysListProps> = ({ searchQuery }) => {
     },
     {
       keepPreviousData: true,
-      refetchInterval: 1500,
+      refetchInterval: 1000,
     }
   );
   return (

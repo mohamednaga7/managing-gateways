@@ -1,15 +1,21 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { GatewayIcon } from "../../assets/GatewayIcon";
 import { useQuery } from "@tanstack/react-query";
 import { fetchGatewayDetails } from "../../services/gateways-service";
 import { CreateDeviceModal } from "../../components/CreateDeviceModal/CreateDeviceModal";
 import { DevicesList } from "../../components/DevicesList/DevicesList";
+import { ConnectDeviceToGatewayModal } from "../../components/ConnectDeviceToGatewayModal/ConnectDeviceToGatewayModal";
+import { RightArrowIcon } from "../../assets/icons/RightArrowIcon";
 
 export const GatewayDetailsScreen: React.FC = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const [showAddDeviceToGatewayModal, setShowAddDeviceToGatewayModal] =
+    useState(false);
+
+  const [showConnectDeviceToGatewayModal, setShowConnectDeviceToGatewayModal] =
     useState(false);
 
   const { data: gateway, isLoading } = useQuery(
@@ -17,7 +23,7 @@ export const GatewayDetailsScreen: React.FC = () => {
     () => fetchGatewayDetails(id),
     {
       keepPreviousData: true,
-      refetchInterval: 1500,
+      refetchInterval: 1000,
     }
   );
 
@@ -34,7 +40,15 @@ export const GatewayDetailsScreen: React.FC = () => {
   }
 
   return (
-    <div className="py-10 px-5">
+    <div className="relative py-5 px-5">
+      <button
+        className="rotate-180 mb-6 btn btn-ghost border border-gray-200 btn-sm rounded-full h-10 w-10"
+        onClick={() => {
+          navigate("/gateways");
+        }}
+      >
+        <RightArrowIcon />
+      </button>
       <div className="flex flex-col items-start gap-5">
         <div className="flex justify-center items-center mb-3">
           <GatewayIcon />
@@ -65,16 +79,30 @@ export const GatewayDetailsScreen: React.FC = () => {
         onClose={() => setShowAddDeviceToGatewayModal(false)}
         show={showAddDeviceToGatewayModal}
       />
+      <ConnectDeviceToGatewayModal
+        gateway={gateway}
+        show={showConnectDeviceToGatewayModal}
+        onClose={() => {
+          setShowConnectDeviceToGatewayModal(false);
+        }}
+      />
       <div className="flex flex-col sm:flex-row mb-6 gap-4 justify-between items-center">
         <h2 className="text-lg font-bold uppercase">Devices</h2>
         <div className="flex flex-col sm:flex-row gap-2">
-          <div className="btn btn-primary btn-sm">Connect Existing Devices</div>
-          <div
+          <button
+            onClick={() => {
+              setShowConnectDeviceToGatewayModal(true);
+            }}
+            className="btn btn-primary btn-sm"
+          >
+            Connect Existing Devices
+          </button>
+          <button
             className="btn btn-primary btn-sm"
             onClick={() => setShowAddDeviceToGatewayModal(true)}
           >
             Add Device To Gateway
-          </div>
+          </button>
         </div>
       </div>
       <DevicesList data={gateway.devices} />

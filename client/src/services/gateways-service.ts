@@ -68,3 +68,13 @@ export const connectDeviceToGateway = async (
   );
   return data;
 };
+
+export const disconnectDeviceFromGateway = async (
+  gatewayId: string,
+  deviceId: string
+) => {
+  const { data } = await axiosInstance.delete(
+    `/gateways/${gatewayId}/devices/${deviceId}`
+  );
+  return data;
+};

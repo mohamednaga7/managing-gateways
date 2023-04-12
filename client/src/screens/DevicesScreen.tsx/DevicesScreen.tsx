@@ -20,7 +20,7 @@ export const DevicesScreen: React.FC = () => {
     },
     {
       keepPreviousData: true,
-      refetchInterval: 1500,
+      refetchInterval: 1000,
     }
   );
   return (
@@ -40,7 +40,7 @@ export const DevicesScreen: React.FC = () => {
         </div>
       </div>
       <hr className="my-5" />
-      <DevicesList devicesScreen data={data?.pages[0].devices || []} />
+      <DevicesList data={data?.pages[0].devices || []} />
     </div>
   );
 };

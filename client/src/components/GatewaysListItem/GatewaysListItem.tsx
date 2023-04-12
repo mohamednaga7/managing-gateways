@@ -1,6 +1,6 @@
 import React from "react";
 import { Gateway } from "../../types/gateways";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { GatewayIcon } from "../../assets/GatewayIcon";
 import { TrashIcon } from "../../assets/icons/TrashIcon";
 import { EditIcon } from "../../assets/icons/EditIcon";
@@ -33,7 +33,12 @@ export const GatewaysListItem: React.FC<GatewaysListItemProps> = ({
         <GatewayIcon />
       </div>
       <div className="grow flex-col justify-between max-w-full">
-        <div className="text-md font-bold uppercase mb-2">{gateway.name}</div>
+        <Link
+          to={`/gateways/${gateway._id}`}
+          className="text-md font-bold uppercase mb-2"
+        >
+          {gateway.name}
+        </Link>
         <div className="grid grid-cols-3 gap-x-2 gap-y-1 max-w-full">
           <span className="text-gray-400 font-bold text-sm sm:text-md">
             IP:

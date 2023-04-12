@@ -25,8 +25,13 @@ export class DeviceController {
   }
 
   @Get()
-  findAll() {
-    return this.deviceService.findAll();
+  async findAll() {
+    const devices = await this.deviceService.findAll();
+    const count = await this.deviceService.totalDevices();
+    return {
+      total: count,
+      devices,
+    };
   }
 
   @Get(':id')

@@ -35,7 +35,7 @@ export const GatewaysList: React.FC<GatewaysListProps> = ({ searchQuery }) => {
     }
   );
   return (
-    <div className="grid mx-auto lg:mx-0 grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 px-2 sm:p-5 py-5 gap-5 w-max max-w-full">
+    <div className="grid mx-auto lg:mx-0 grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 px-2 sm:px-5 py-5 gap-5 w-max max-w-full">
       <DeleteGatewayModal
         gateway={currentDeletingGateway}
         onClose={() => setCurrentDeletingGateway(null)}

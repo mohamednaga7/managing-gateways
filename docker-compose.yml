@@ -1,12 +1,29 @@
 version: '3'
 services:
+  db:
+    image: mongo:latest
+    container_name: gateways-manager-db
+    restart: always
+    volumes:
+      - gateways-manager-db-volume:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    networks:
+      - gateways_manager_app_network
+
   api:
     build:
       context: ./api
     container_name: gateways-manager-api
-    ports:
-      - 4004:4004
+    depends_on:
+      - db
+    restart: always
+    environment:
+      - MONGO_DB_URL=mongodb://root:root@db:27017/?retryWrites=true&w=majority
     env_file: ./api/.env
+    networks:
+      - gateways_manager_app_network
 
   client:
     build:
@@ -14,7 +31,16 @@ services:
     container_name: gateways-manager-client
     depends_on:
       - api
+    restart: always
     ports:
       - 80:80
     env_file: ./client/.env
+    networks:
+      - gateways_manager_app_network
     
+networks:
+  gateways_manager_app_network:
+    driver: bridge
+
+volumes:
+  gateways-manager-db-volume:

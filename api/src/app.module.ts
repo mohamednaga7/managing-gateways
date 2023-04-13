@@ -13,6 +13,7 @@ import * as Joi from 'joi';
         NODE_ENV: Joi.string()
           .valid('development', 'production', 'test', 'provision')
           .default('development'),
+        MONGO_DB_URL: Joi.string().required(),
         PORT: Joi.number().default(3000),
       }),
       ignoreEnvFile: !!(

@@ -13,8 +13,7 @@ services:
       - gateways_manager_app_network
 
   api:
-    build:
-      context: ./api
+    image: ghcr.io/mohamednaga7/gateways_manager_api:latest
     container_name: gateways-manager-api
     depends_on:
       - db
@@ -26,8 +25,7 @@ services:
       - gateways_manager_app_network
 
   client:
-    build:
-      context: ./client
+    image: ghcr.io/mohamednaga7/gateways_manager_client:latest
     container_name: gateways-manager-client
     depends_on:
       - api

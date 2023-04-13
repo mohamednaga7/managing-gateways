@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { RightArrowIcon } from "../../assets/icons/LeftArrowIcon";
+import { RightArrowIcon } from "../../assets/icons/RightArrowIcon";
 
 export const Layout: React.FC<React.PropsWithChildren> = ({ children }) => {
   return (

@@ -6,7 +6,7 @@ import { fetchGatewayDetails } from "../../services/gateways-service";
 import { CreateDeviceModal } from "../../components/CreateDeviceModal/CreateDeviceModal";
 import { DevicesList } from "../../components/DevicesList/DevicesList";
 import { ConnectDeviceToGatewayModal } from "../../components/ConnectDeviceToGatewayModal/ConnectDeviceToGatewayModal";
-import { LeftArrowIcon } from "../../assets/icons/LeftArrowIcon";
+import { RightArrowIcon } from "../../assets/icons/RightArrowIcon";
 
 export const GatewayDetailsScreen: React.FC = () => {
   const { id } = useParams();
@@ -47,7 +47,7 @@ export const GatewayDetailsScreen: React.FC = () => {
           navigate("/gateways");
         }}
       >
-        <LeftArrowIcon />
+        <RightArrowIcon />
       </button>
       <div className="flex flex-col items-start gap-5">
         <div className="flex justify-center items-center mb-3">

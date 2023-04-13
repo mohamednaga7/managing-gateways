@@ -1,4 +1,4 @@
-export const RightArrowIcon = () => (
+export const LeftArrowIcon = () => (
   <svg
     clipRule="evenodd"
     fillRule="evenodd"

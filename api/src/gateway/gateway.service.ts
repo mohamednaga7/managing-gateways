@@ -158,7 +158,7 @@ export class GatewayService {
 
     if (!updatedGateway)
       throw new BadRequestException({
-        message: 'Error removing device from gateway',
+        message: 'Error removing device from gateway connected devices',
       });
   }
 

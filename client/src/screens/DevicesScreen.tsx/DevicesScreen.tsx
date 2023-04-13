@@ -1,4 +1,4 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { fetchDevices } from "../../services/devices-service";
 import { DevicesList } from "../../components/DevicesList/DevicesList";
@@ -8,7 +8,7 @@ export const DevicesScreen: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [showCreateDeviceModal, setShowCreateDeviceModal] = useState(false);
 
-  const { data } = useInfiniteQuery(
+  const { data } = useQuery(
     ["getDevices", currentPage],
     async () => {
       const result = await fetchDevices({
@@ -40,7 +40,13 @@ export const DevicesScreen: React.FC = () => {
         </div>
       </div>
       <hr className="my-5" />
-      <DevicesList data={data?.pages[0].devices || []} />
+      {data?.devices?.length ? (
+        <DevicesList data={data?.devices || []} />
+      ) : (
+        <div className="w-full text-center flex justify-center">
+          No Devices Found
+        </div>
+      )}
     </div>
   );
 };

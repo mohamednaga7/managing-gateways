@@ -105,7 +105,7 @@ export const GatewayDetailsScreen: React.FC = () => {
           </button>
         </div>
       </div>
-      <DevicesList data={gateway.devices} />
+      <DevicesList gatewayId={gateway._id} data={gateway.devices} />
     </div>
   );
 };

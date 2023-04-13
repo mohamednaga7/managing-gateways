@@ -6,9 +6,12 @@ import { DeviceSchema } from './entities/device.entity';
 import { GatewayModule } from 'src/gateway/gateway.module';
 
 @Module({
-  imports: [MongooseModule.forFeature([{ name: 'Device', schema: DeviceSchema }]), forwardRef(() => GatewayModule)],
+  imports: [
+    MongooseModule.forFeature([{ name: 'Device', schema: DeviceSchema }]),
+    forwardRef(() => GatewayModule),
+  ],
   controllers: [DeviceController],
   providers: [DeviceService],
-  exports: [DeviceService]
+  exports: [DeviceService],
 })
-export class DeviceModule { }
+export class DeviceModule {}

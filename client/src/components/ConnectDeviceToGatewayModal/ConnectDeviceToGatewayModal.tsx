@@ -1,9 +1,10 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import React, { useMemo, useState } from "react";
 import { fetchDevices } from "../../services/devices-service";
 import { Gateway } from "../../types/gateways";
 import { DeviceListItem } from "../DeviceListItem/DeviceListItem";
 import { connectDeviceToGateway } from "../../services/gateways-service";
+import { Modal } from "../Modal/Modal";
 
 interface Props {
   show: boolean;
@@ -20,7 +21,7 @@ export const ConnectDeviceToGatewayModal: React.FC<Props> = ({
   const [sendingRequest, setSendingRequest] = useState(false);
   const [selectedDeviceId, setSelectedDeviceId] = useState<string | null>(null);
 
-  const { data, remove, refetch } = useInfiniteQuery(
+  const { data, remove, refetch } = useQuery(
     ["getDevices", currentPage],
     async () => {
       const result = await fetchDevices({
@@ -37,8 +38,8 @@ export const ConnectDeviceToGatewayModal: React.FC<Props> = ({
   );
 
   const devices = useMemo(() => {
-    if (data && data.pages.length > 0) {
-      return data.pages[0].devices.filter((device) => {
+    if (data) {
+      return data.devices.filter((device) => {
         return !gateway.devices.find((gatewayDevice) => {
           return gatewayDevice._id === device._id;
         });
@@ -56,61 +57,54 @@ export const ConnectDeviceToGatewayModal: React.FC<Props> = ({
     onClose();
   };
   return (
-    <>
-      <input
-        type="checkbox"
-        id="edit-device-modal"
-        checked={show}
-        readOnly
-        className="modal-toggle"
-      />
-      <div className="modal modal-bottom sm:modal-middle">
-        <div className="modal-box">
-          <h3 className="font-bold mb-5 text-xl">Select Device</h3>
-          {devices?.length === 0 ? (
-            <div className="text-center">
-              <p className="text-gray-500 text-xl uppercase font-bold">
-                No devices available
-              </p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {devices?.map((device) => (
-                <div
-                  key={device._id}
-                  className="cursor-pointer w-full h-full"
-                  onClick={() => {
-                    setSelectedDeviceId(device._id);
-                  }}
-                >
-                  <DeviceListItem
-                    device={device}
-                    noActions
-                    isSelected={selectedDeviceId === device._id}
-                  />
-                </div>
-              ))}
-            </div>
-          )}
-          <div className="modal-action">
-            <button
-              onClick={() => {
-                onClose();
-              }}
-              className="btn btn-ghost"
-            >
-              Cancel
-            </button>
-            <button
-              disabled={!selectedDeviceId || sendingRequest}
-              className="btn"
-              onClick={handleConnectDeviceAndGateway}
-            >
-              {sendingRequest ? "Saving..." : "Save"}
-            </button>
-          </div>
+    <Modal
+      modalId="connect-device-to-gateway-modal"
+      onClose={onClose}
+      show={show}
+    >
+      <h3 className="font-bold mb-5 text-xl">Select Device</h3>
+      {devices?.length === 0 ? (
+        <div className="text-center">
+          <p className="text-gray-500 text-xl uppercase font-bold">
+            No devices available
+          </p>
         </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {devices?.map((device) => (
+            <div
+              key={device._id}
+              className="cursor-pointer w-full h-full"
+              onClick={() => {
+                setSelectedDeviceId(device._id);
+              }}
+            >
+              <DeviceListItem
+                device={device}
+                noActions
+                isSelected={selectedDeviceId === device._id}
+              />
+            </div>
+          ))}
+        </div>
+      )}
+      <div className="modal-action">
+        <button
+          onClick={() => {
+            onClose();
+          }}
+          className="btn btn-ghost"
+        >
+          Cancel
+        </button>
+        <button
+          disabled={!selectedDeviceId || sendingRequest}
+          className="btn"
+          onClick={handleConnectDeviceAndGateway}
+        >
+          {sendingRequest ? "Saving..." : "Save"}
+        </button>
       </div>
-    </>
+    </Modal>
   );
 };

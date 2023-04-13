@@ -35,7 +35,7 @@ export const GatewaysListItem: React.FC<GatewaysListItemProps> = ({
       <div className="grow flex-col justify-between max-w-full">
         <Link
           to={`/gateways/${gateway._id}`}
-          className="text-md font-bold uppercase mb-2"
+          className=" block text-md font-bold uppercase mb-2 max-w-[73%]"
         >
           {gateway.name}
         </Link>

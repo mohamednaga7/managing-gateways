@@ -12,6 +12,9 @@ services:
     build:
       context: ./client
     container_name: gateways-manager-client
+    depends_on:
+      - api
     ports:
-      - 3000:3000
+      - 80:80
     env_file: ./client/.env
+    

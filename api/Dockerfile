@@ -12,4 +12,4 @@ RUN yarn build
 
 EXPOSE 4004
 
-CMD [ "yarn", "start" ]
+CMD [ "yarn", "start:prod" ]

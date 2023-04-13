@@ -20,7 +20,6 @@ services:
     restart: always
     environment:
       - MONGO_DB_URL=mongodb://root:root@db:27017/?retryWrites=true&w=majority
-    env_file: ./api/.env
     networks:
       - gateways_manager_app_network
 
@@ -32,7 +31,6 @@ services:
     restart: always
     ports:
       - 80:80
-    env_file: ./client/.env
     networks:
       - gateways_manager_app_network
     

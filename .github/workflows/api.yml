@@ -45,7 +45,7 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
-            cd /home/apps/managing_gateways
+            cd /root/apps/managing_gateways
             git pull origin main
             docker-compose pull api
             docker-compose up -d --force-recreate api

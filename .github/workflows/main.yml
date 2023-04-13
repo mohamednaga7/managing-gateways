@@ -1,108 +1,108 @@
-name: CI
+# name: CI
 
-on:
-  push:
-    branches:
-      - main
+# on:
+#   push:
+#     branches:
+#       - main
 
-jobs:
-  determine_project:
-    runs-on: ubuntu-latest
+# jobs:
+#   determine_project:
+#     runs-on: ubuntu-latest
 
-    outputs:
-      project: ${{ steps.diff.outputs.project }}
+#     outputs:
+#       project: ${{ steps.diff.outputs.project }}
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Determine changed project
-        id: diff
-        run: echo "::set-output name=project::$(git diff --name-only HEAD^ HEAD | grep -E '^(api|client)/' | cut -d/ -f1 | uniq)"
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v3
+#       - name: Determine changed project
+#         id: diff
+#         run: echo "::set-output name=project::$(git diff --name-only HEAD^ HEAD | grep -E '^(api|client)/' | cut -d/ -f1 | uniq)"
 
-  client_build:
-    needs: determine_project
-    if: needs.determine_project.outputs.project == 'client'
-    runs-on: ubuntu-latest
+#   client_build:
+#     needs: determine_project
+#     if: needs.determine_project.outputs.project == 'client'
+#     runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v3
+#     steps:
+#       - uses: actions/checkout@v3
 
-      - name: docker login
-        env:
-          DOCKER_USER: ${{ secrets.DOCKER_USER }}
-          DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
+#       - name: docker login
+#         env:
+#           DOCKER_USER: ${{ secrets.DOCKER_USER }}
+#           DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
 
-        run: |
-          echo $DOCKER_ACCESS_TOKEN | docker login ghcr.io --username $DOCKER_USER --password-stdin
+#         run: |
+#           echo $DOCKER_ACCESS_TOKEN | docker login ghcr.io --username $DOCKER_USER --password-stdin
 
-      - name: docker build
-        run: |
-          docker build ./client -t gateways_manager_client
+#       - name: docker build
+#         run: |
+#           docker build ./client -t gateways_manager_client
 
-      - name: tag the build
-        run: |
-          docker tag gateways_manager_client ghcr.io/mohamednaga7/gateways_manager_client
+#       - name: tag the build
+#         run: |
+#           docker tag gateways_manager_client ghcr.io/mohamednaga7/gateways_manager_client
 
-      - name: docker push
-        run: |
-          docker push ghcr.io/mohamednaga7/gateways_manager_client
+#       - name: docker push
+#         run: |
+#           docker push ghcr.io/mohamednaga7/gateways_manager_client
 
-  api_build:
-    needs: determine_project
-    if: needs.determine_project.outputs.project == 'api'
-    runs-on: ubuntu-latest
+#   api_build:
+#     needs: determine_project
+#     if: needs.determine_project.outputs.project == 'api'
+#     runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v3
+#     steps:
+#       - uses: actions/checkout@v3
 
-      - name: docker login
-        env:
-          DOCKER_USER: ${{ secrets.DOCKER_USER }}
-          DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
+#       - name: docker login
+#         env:
+#           DOCKER_USER: ${{ secrets.DOCKER_USER }}
+#           DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
 
-        run: |
-          echo $DOCKER_ACCESS_TOKEN | docker login ghcr.io --username $DOCKER_USER --password-stdin
+#         run: |
+#           echo $DOCKER_ACCESS_TOKEN | docker login ghcr.io --username $DOCKER_USER --password-stdin
 
-      - name: docker build
-        run: |
-          docker build ./api -t gateways_manager_api
+#       - name: docker build
+#         run: |
+#           docker build ./api -t gateways_manager_api
 
-      - name: tag the build
-        run: |
-          docker tag gateways_manager_api ghcr.io/mohamednaga7/gateways_manager_api
+#       - name: tag the build
+#         run: |
+#           docker tag gateways_manager_api ghcr.io/mohamednaga7/gateways_manager_api
 
-      - name: docker push
-        run: |
-          docker push ghcr.io/mohamednaga7/gateways_manager_api
+#       - name: docker push
+#         run: |
+#           docker push ghcr.io/mohamednaga7/gateways_manager_api
 
-  client_deploy:
-    needs: client_build
-    runs-on: ubuntu-latest
-    steps:
-      - name: SSH and deploy to the server
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          password: ${{ secrets.SSH_PASSWORD }}
-          script: |
-            cd ~/apps/managing_gateways
-            git pull origin main
-            docker-compose pull client
-            docker-compose up -d --force-recreate client
+#   client_deploy:
+#     needs: client_build
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: SSH and deploy to the server
+#         uses: appleboy/ssh-action@master
+#         with:
+#           host: ${{ secrets.SSH_HOST }}
+#           username: ${{ secrets.SSH_USERNAME }}
+#           password: ${{ secrets.SSH_PASSWORD }}
+#           script: |
+#             cd ~/apps/managing_gateways
+#             git pull origin main
+#             docker-compose pull client
+#             docker-compose up -d --force-recreate client
 
-  api_deploy:
-    needs: api_build
-    runs-on: ubuntu-latest
-    steps:
-      - name: SSH and deploy to the server
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          password: ${{ secrets.SSH_PASSWORD }}
-          script: |
-            cd ~/apps/managing_gateways
-            git pull origin main
-            docker-compose pull api
-            docker-compose up -d --force-recreate api
+#   api_deploy:
+#     needs: api_build
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: SSH and deploy to the server
+#         uses: appleboy/ssh-action@master
+#         with:
+#           host: ${{ secrets.SSH_HOST }}
+#           username: ${{ secrets.SSH_USERNAME }}
+#           password: ${{ secrets.SSH_PASSWORD }}
+#           script: |
+#             cd ~/apps/managing_gateways
+#             git pull origin main
+#             docker-compose pull api
+#             docker-compose up -d --force-recreate api

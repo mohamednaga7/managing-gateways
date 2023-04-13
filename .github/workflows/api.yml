@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - api/**
+
+jobs:
+  api_build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: docker login
+        env:
+          DOCKER_USER: ${{ secrets.DOCKER_USER }}
+          DOCKER_ACCESS_TOKEN: ${{ secrets.DOCKER_ACCESS_TOKEN }}
+
+        run: |
+          echo $DOCKER_ACCESS_TOKEN | docker login ghcr.io --username $DOCKER_USER --password-stdin
+
+      - name: docker build
+        run: |
+          docker build ./api -t gateways_manager_api
+
+      - name: tag the build
+        run: |
+          docker tag gateways_manager_api ghcr.io/mohamednaga7/gateways_manager_api
+
+      - name: docker push
+        run: |
+          docker push ghcr.io/mohamednaga7/gateways_manager_api
+
+  api_deploy:
+    needs: api_build
+    runs-on: ubuntu-latest
+    steps:
+      - name: SSH and deploy to the server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          script: |
+            cd ~/apps/managing_gateways
+            git pull origin main
+            docker-compose pull api
+            docker-compose up -d --force-recreate api

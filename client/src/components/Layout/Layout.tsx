@@ -10,7 +10,7 @@ export const Layout: React.FC<React.PropsWithChildren> = ({ children }) => {
         <div className="h-screen w-full">
           <label
             htmlFor="my-drawer-2"
-            className="absolute btn btn-ghost btn-xs border -translate-x-1 rounded-tr-lg rounded-br-lg border-gray-200 drawer-button lg:hidden mt-5"
+            className="absolute btn btn-ghost btn-xs border -translate-x-1 hover:shadow-md rounded-tr-lg rounded-br-lg border-gray-200 drawer-button lg:hidden mt-5"
           >
             <RightArrowIcon />
           </label>

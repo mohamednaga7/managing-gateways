@@ -21,7 +21,7 @@ export class DeviceService {
       .lean();
     if (foundDevice)
       throw new BadRequestException({
-        message: 'a device with the same UID exists',
+        message: 'a device with the same UID already exists',
       });
 
     return await this.deviceModel.create({

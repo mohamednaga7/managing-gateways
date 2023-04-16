@@ -120,12 +120,14 @@ export const GatewayDetailsScreen: React.FC = () => {
         <h2 className="text-lg font-bold uppercase">Devices</h2>
         <div className="flex flex-col sm:flex-row gap-2">
           <button
+            disabled={gateway.devices.length >= 10}
             onClick={handleDisplayConnectDeviceToGatewayModal}
             className="btn btn-primary btn-sm"
           >
             Connect Existing Devices
           </button>
           <button
+            disabled={gateway.devices.length >= 10}
             className="btn btn-primary btn-sm"
             onClick={handleDisplayAddDeviceToGatewayModal}
           >

@@ -13,26 +13,30 @@ services:
       - gateways_manager_app_network
 
   api:
-    image: ghcr.io/mohamednaga7/gateways_manager_api:latest
+    build:
+      context: ./api
+      dockerfile: Dockerfile
     container_name: gateways-manager-api
     depends_on:
       - db
     restart: always
+    ports:
+      - 4004:4004
     environment:
       - MONGO_DB_URL=mongodb://root:root@db:27017/?retryWrites=true&w=majority
     networks:
       - gateways_manager_app_network
 
   client:
-    image: ghcr.io/mohamednaga7/gateways_manager_client:latest
+    build:
+      context: ./client
+      dockerfile: Dockerfile
     container_name: gateways-manager-client
     depends_on:
       - api
     restart: always
-    volumes:
-      - /apps/certs/gateways-manager.mohamednagah.com/.well-known/pki-validation:/usr/share/nginx/html/.well-known/pki-validation
     ports:
-      - 80:80
+      - 8000:80
     networks:
       - gateways_manager_app_network
     

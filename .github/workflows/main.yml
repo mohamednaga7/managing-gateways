@@ -19,12 +19,18 @@ jobs:
         id: filter
         with:
           filters: |
+            workflows:
+              - '.github/workflows/**'
             api:
               - 'api/**'
             client:
               - 'client/**'
             docker:
               - 'docker compose.yml'
+
+      - name: workflows changed
+        if: steps.filter.outputs.workflows == 'true'
+        run: echo "Workflows changed"
 
       - name: api changed
         if: steps.filter.outputs.api == 'true'
@@ -134,7 +140,7 @@ jobs:
       - client_build
       - api_build
     runs-on: ubuntu-latest
-    if: needs.paths-filter.outputs.docker == 'true'
+    if: needs.paths-filter.outputs.docker == 'true' || needs.paths-filter.outputs.workflows == 'true'
     steps:
       - name: SSH and deploy to the server
         uses: appleboy/ssh-action@master

@@ -24,7 +24,7 @@ jobs:
             client:
               - 'client/**'
             docker:
-              - 'docker-compose.yml'
+              - 'docker compose.yml'
 
       - name: api changed
         if: steps.filter.outputs.api == 'true'
@@ -109,8 +109,8 @@ jobs:
           script: |
             cd /apps/managing-gateways
             git pull origin main
-            docker-compose pull client
-            docker-compose up -d --force-recreate client
+            docker compose pull client
+            docker compose up -d --force-recreate client
 
   api_deploy:
     needs: api_build
@@ -125,11 +125,14 @@ jobs:
           script: |
             cd /apps/managing-gateways
             git pull origin main
-            docker-compose pull api
-            docker-compose up -d --force-recreate api
+            docker compose pull api
+            docker compose up -d --force-recreate api
 
   docker_deploy:
-    needs: paths-filter
+    needs:
+      - paths-filter
+      - client_build
+      - api_build
     runs-on: ubuntu-latest
     if: needs.paths-filter.outputs.docker == 'true'
     steps:
@@ -142,5 +145,5 @@ jobs:
           script: |
             cd /apps/managing-gateways
             git pull origin main
-            docker-compose pull
-            docker-compose up -d --force-recreate
+            docker compose pull
+            docker compose up -d --force-recreate

@@ -137,10 +137,8 @@ jobs:
   docker_deploy:
     needs:
       - paths-filter
-      - client_build
-      - api_build
     runs-on: ubuntu-latest
-    if: needs.paths-filter.outputs.docker == 'true' || needs.paths-filter.outputs.workflows == 'true'
+    if: needs.paths-filter.outputs.client != 'true' && needs.paths-filter.outputs.docker != 'true' && needs.paths-filter.outputs.docker == 'true' || needs.paths-filter.outputs.workflows == 'true'
     steps:
       - name: SSH and deploy to the server
         uses: appleboy/ssh-action@master

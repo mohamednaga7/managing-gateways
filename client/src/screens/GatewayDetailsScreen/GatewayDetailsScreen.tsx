@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { GatewayIcon } from "../../assets/GatewayIcon";
+import { ToastContainer, toast } from "react-toastify";
 import { useQuery } from "@tanstack/react-query";
+import "react-toastify/dist/ReactToastify.css";
+import { GatewayIcon } from "../../assets/GatewayIcon";
 import { fetchGatewayDetails } from "../../services/gateways-service";
 import { CreateDeviceModal } from "../../components/CreateDeviceModal/CreateDeviceModal";
 import { DevicesList } from "../../components/DevicesList/DevicesList";
@@ -27,6 +29,30 @@ export const GatewayDetailsScreen: React.FC = () => {
     }
   );
 
+  const handleDisplayAddDeviceToGatewayModal = () => {
+    if (!gateway) return;
+    if (gateway?.devices.length >= 10) {
+      toast("Each gateway can only have 10 devices", {
+        type: "error",
+        toastId: "only-1-device-for-gateway-add",
+      });
+      return;
+    }
+    setShowAddDeviceToGatewayModal(true);
+  };
+
+  const handleDisplayConnectDeviceToGatewayModal = () => {
+    if (!gateway) return;
+    if (gateway?.devices.length >= 10) {
+      toast("Each gateway can only have 10 devices", {
+        type: "error",
+        toastId: "only-1-device-for-gateway-add",
+      });
+      return;
+    }
+    setShowConnectDeviceToGatewayModal(true);
+  };
+
   if (isLoading) {
     return (
       <div className="w-full h-screen flex justify-center items-center">
@@ -41,6 +67,10 @@ export const GatewayDetailsScreen: React.FC = () => {
 
   return (
     <div className="relative py-5 px-5">
+      <ToastContainer
+        position="top-center"
+        progressStyle={{ background: "blue" }}
+      />
       <button
         className="rotate-180 mb-6 btn btn-ghost border border-gray-200 btn-sm rounded-full h-10 w-10"
         onClick={() => {
@@ -90,16 +120,14 @@ export const GatewayDetailsScreen: React.FC = () => {
         <h2 className="text-lg font-bold uppercase">Devices</h2>
         <div className="flex flex-col sm:flex-row gap-2">
           <button
-            onClick={() => {
-              setShowConnectDeviceToGatewayModal(true);
-            }}
+            onClick={handleDisplayConnectDeviceToGatewayModal}
             className="btn btn-primary btn-sm"
           >
             Connect Existing Devices
           </button>
           <button
             className="btn btn-primary btn-sm"
-            onClick={() => setShowAddDeviceToGatewayModal(true)}
+            onClick={handleDisplayAddDeviceToGatewayModal}
           >
             Add Device To Gateway
           </button>

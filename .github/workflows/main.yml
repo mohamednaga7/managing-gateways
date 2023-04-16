@@ -9,6 +9,7 @@ jobs:
   paths-filter:
     runs-on: ubuntu-latest
     outputs:
+      workflows: ${{ steps.filter.outputs.workflows }}
       api: ${{ steps.filter.outputs.api }}
       client: ${{ steps.filter.outputs.client }}
       docker: ${{ steps.filter.outputs.docker }}

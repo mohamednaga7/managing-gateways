@@ -83,6 +83,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: move to api directory
+        run: cd api
+
       - name: install dependencies
         run: yarn install
 

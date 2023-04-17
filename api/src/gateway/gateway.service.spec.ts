@@ -88,4 +88,21 @@ describe('GatewayService', () => {
       );
     });
   });
+
+  describe('findAll', () => {
+    it('should return an array of gateways', async () => {
+      const expectedGateways = [
+        { id: '1', name: 'Gateway 1' },
+        { id: '2', name: 'Gateway 2' },
+      ];
+
+      jest.spyOn(gatewayModel, 'find').mockResolvedValue(expectedGateways);
+
+      const result = await service.findAll();
+
+      expect(result).toEqual(expectedGateways);
+      expect(gatewayModel.find).toHaveBeenCalledTimes(1);
+      expect(gatewayModel.find).toHaveBeenCalledWith();
+    });
+  });
 });

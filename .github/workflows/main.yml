@@ -92,6 +92,8 @@ jobs:
   api_build:
     runs-on: ubuntu-latest
 
+    needs: api_test
+
     steps:
       - uses: actions/checkout@v2
 

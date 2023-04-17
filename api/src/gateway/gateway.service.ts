@@ -6,8 +6,8 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
-import { DeviceService } from 'src/device/device.service';
-import { CreateDeviceDto } from 'src/device/dto/create-device.dto';
+import { DeviceService } from '../device/device.service';
+import { CreateDeviceDto } from '../device/dto/create-device.dto';
 import { CreateGatewayDto } from './dto/create-gateway.dto';
 import { UpdateGatewayDto } from './dto/update-gateway.dto';
 import { Gateway } from './entities/gateway.entity';

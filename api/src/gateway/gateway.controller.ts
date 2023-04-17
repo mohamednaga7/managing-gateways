@@ -11,7 +11,7 @@ import {
 import { GatewayService } from './gateway.service';
 import { CreateGatewayDto } from './dto/create-gateway.dto';
 import { UpdateGatewayDto } from './dto/update-gateway.dto';
-import { CreateDeviceDto } from 'src/device/dto/create-device.dto';
+import { CreateDeviceDto } from '../device/dto/create-device.dto';
 import { isIPv4 } from 'net';
 
 @Controller('api/v1/gateways')

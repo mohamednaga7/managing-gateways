@@ -1,33 +1,38 @@
-import * as mongoose from "mongoose";
-import { Device } from "src/device/entities/device.entity";
+import * as mongoose from 'mongoose';
+import { Device } from '../../device/entities/device.entity';
 
-export const GatewaySchema = new mongoose.Schema({
-  serial: {
-    type: String,
-    required: true,
-    unique: true,
+export const GatewaySchema = new mongoose.Schema(
+  {
+    serial: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    name: {
+      type: String,
+      required: true,
+    },
+    IPv4: {
+      type: String,
+      required: true,
+    },
+    devices: [
+      {
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: 'Device',
+      },
+    ],
   },
-  name: {
-    type: String,
-    required: true,
+  {
+    timestamps: true,
+    versionKey: false,
   },
-  IPv4: {
-    type: String,
-    required: true
-  },
-  devices: [{
-    type: mongoose.SchemaTypes.ObjectId,
-    ref: 'Device'
-  }]
-}, {
-  timestamps: true,
-  versionKey: false
-})
+);
 
 export interface Gateway {
-  _id: string,
-  serial: string,
-  name: string,
-  IPv4: string,
-  devices: Device[]
+  _id: string;
+  serial: string;
+  name: string;
+  IPv4: string;
+  devices: Device[];
 }

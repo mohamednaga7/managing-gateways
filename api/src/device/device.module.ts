@@ -3,7 +3,7 @@ import { DeviceService } from './device.service';
 import { DeviceController } from './device.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { DeviceSchema } from './entities/device.entity';
-import { GatewayModule } from 'src/gateway/gateway.module';
+import { GatewayModule } from '../gateway/gateway.module';
 
 @Module({
   imports: [

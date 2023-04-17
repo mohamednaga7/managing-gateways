@@ -1,4 +1,4 @@
-import { IsEnum, IsNotEmpty, IsString } from "class-validator";
+import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateDeviceDto {
   @IsString()
@@ -8,4 +8,8 @@ export class CreateDeviceDto {
   @IsString()
   @IsNotEmpty()
   vendor: string;
+
+  @IsOptional()
+  @IsEnum(['ONLINE', 'OFFLINE'])
+  status?: string;
 }

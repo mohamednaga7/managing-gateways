@@ -16,22 +16,24 @@ export class DeviceService {
   ) {}
 
   async create(createDeviceDto: CreateDeviceDto) {
-    const foundDevice = await this.deviceModel
-      .findOne({ UID: createDeviceDto.UID })
-      .lean();
+    const foundDevice = await this.deviceModel.findOne({
+      UID: createDeviceDto.UID,
+    });
     if (foundDevice)
       throw new BadRequestException({
         message: 'a device with the same UID already exists',
       });
 
-    return await this.deviceModel.create({
+    const createdDevice = await this.deviceModel.create({
       ...createDeviceDto,
       status: 'ONLINE',
     });
+
+    return createdDevice.toObject();
   }
 
-  async findAll() {
-    return await this.deviceModel.find().lean();
+  findAll(): Promise<Device[]> {
+    return this.deviceModel.find();
   }
 
   async totalDevices() {
@@ -39,7 +41,7 @@ export class DeviceService {
   }
 
   async findOne(id: string) {
-    const device = await this.deviceModel.findById(id).lean();
+    const device = await this.deviceModel.findById(id);
     if (!device) throw new NotFoundException({ message: 'Device not found' });
     return device;
   }
@@ -49,14 +51,11 @@ export class DeviceService {
     if (!foundDevice)
       throw new NotFoundException({ message: 'Device not found' });
 
-    const updatedDevice = await this.deviceModel
-      .updateOne(
-        { _id: new mongoose.Types.ObjectId(id) },
-        { ...updateDeviceDto },
-        { new: true },
-      )
-      .lean();
-    return updatedDevice;
+    return await this.deviceModel.updateOne(
+      { _id: new mongoose.Types.ObjectId(id) },
+      { ...updateDeviceDto },
+      { new: true },
+    );
   }
 
   async remove(id: string) {

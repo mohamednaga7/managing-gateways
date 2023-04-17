@@ -33,6 +33,7 @@ services:
       - /apps/certs/gateways-manager.mohamednagah.com:/etc/nginx/certs
     ports:
       - 80:80
+      - 443:443
     networks:
       - gateways_manager_app_network
     

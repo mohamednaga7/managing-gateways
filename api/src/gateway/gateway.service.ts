@@ -34,7 +34,7 @@ export class GatewayService {
   }
 
   async findAll() {
-    return await this.gatewayModel.find().lean();
+    return await this.gatewayModel.find();
   }
 
   async totalGateways() {
@@ -50,10 +50,7 @@ export class GatewayService {
     return gateway;
   }
 
-  async update(
-    id: string,
-    updateGatewayDto: UpdateGatewayDto,
-  ): Promise<Gateway> {
+  async update(id: string, updateGatewayDto: UpdateGatewayDto) {
     const foundGateway = await this.gatewayModel.findById(id);
     if (!foundGateway)
       throw new NotFoundException({ message: 'No gateway found with this id' });
@@ -71,17 +68,13 @@ export class GatewayService {
         });
     }
 
-    const updatedModel = await this.gatewayModel
-      .updateOne(
-        { _id: new mongoose.Types.ObjectId(id) },
-        {
-          ...updateGatewayDto,
-        },
-        { new: true },
-      )
-      .lean();
-
-    return updatedModel;
+    return await this.gatewayModel.updateOne(
+      { _id: new mongoose.Types.ObjectId(id) },
+      {
+        ...updateGatewayDto,
+      },
+      { new: true },
+    );
   }
 
   async remove(id: string) {

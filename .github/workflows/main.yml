@@ -83,14 +83,15 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: move to api directory
-        run: cd api
-
       - name: install dependencies
-        run: yarn install
+        run: |
+          cd api
+          yarn install
 
       - name: run tests
-        run: yarn test
+        run: |
+          cd api
+          yarn test
 
   api_build:
     runs-on: ubuntu-latest

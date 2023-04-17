@@ -30,7 +30,7 @@ services:
       - api
     restart: always
     volumes:
-      - /apps/certs/gateways-manager.mohamednagah.com:/etc/ssl/certs
+      - /apps/certs/gateways-manager.mohamednagah.com:/etc/nginx/certs
     ports:
       - 80:80
     networks:

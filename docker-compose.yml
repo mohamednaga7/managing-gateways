@@ -30,7 +30,7 @@ services:
       - api
     restart: always
     volumes:
-      - /apps/certs/gateways-manager.mohamednagah.com/.well-known/pki-validation:/usr/share/nginx/html/.well-known/pki-validation
+      - /apps/certs/gateways-manager.mohamednagah.com:/etc/ssl/certs
     ports:
       - 80:80
     networks:

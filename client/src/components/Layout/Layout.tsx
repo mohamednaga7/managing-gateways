@@ -1,24 +1,40 @@
-import React from "react";
+import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import { RightArrowIcon } from "../../assets/icons/RightArrowIcon";
+import { NavbarButtonIcon } from "../../assets/icons/NavbarButtonIcon";
 
 export const Layout: React.FC<React.PropsWithChildren> = ({ children }) => {
+  const [showMenu, setShowMenu] = useState(false);
   return (
     <div className="drawer drawer-mobile">
-      <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
+      <input
+        id="my-drawer-2"
+        type="checkbox"
+        checked={showMenu}
+        readOnly
+        className="drawer-toggle"
+      />
       <div className="drawer-content flex flex-col items-center">
         <div className="h-screen w-full">
-          <label
-            htmlFor="my-drawer-2"
-            className="absolute btn btn-ghost btn-xs border -translate-x-1 hover:shadow-md rounded-tr-lg rounded-br-lg border-gray-200 drawer-button lg:hidden mt-5"
+          <button
+            onClick={() => {
+              setShowMenu(true);
+            }}
+            className="absolute cursor-pointer right-4 btn btn-ghost btn-xs border hover:shadow-md z-10 rounded-md border-gray-200 drawer-button lg:hidden mt-5"
           >
-            <RightArrowIcon />
-          </label>
-          {children}
+            <NavbarButtonIcon />
+          </button>
+          <main className="pt-10 lg:pt-0">{children}</main>
         </div>
       </div>
       <div className="drawer-side border-r">
-        <label htmlFor="my-drawer-2" className="drawer-overlay"></label>
+        <label
+          htmlFor="my-drawer-2"
+          className="drawer-overlay"
+          onClick={() => {
+            setShowMenu(false);
+          }}
+        ></label>
         <ul className="menu gap-4 p-4 w-64 bg-base-100 text-base-content">
           <li>
             <NavLink to="/gateways">Gateways</NavLink>

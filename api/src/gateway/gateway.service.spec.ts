@@ -8,6 +8,7 @@ import { CreateGatewayDto } from './dto/create-gateway.dto';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { UpdateGatewayDto } from './dto/update-gateway.dto';
 import { CreateDeviceDto } from 'src/device/dto/create-device.dto';
+import { Device } from 'src/device/entities/device.entity';
 
 describe('GatewayService', () => {
   let service: GatewayService;
@@ -362,6 +363,43 @@ describe('GatewayService', () => {
       await expect(
         service.addDeviceToGateway(gatewayId, createDeviceDto),
       ).rejects.toThrow(BadRequestException);
+    });
+  });
+
+  describe('connectDeviceToGateway', () => {
+    it('should throw NotFoundException if gateway is not found', async () => {
+      const gatewayId = 'fake-id';
+      const deviceId = 'fake-id';
+
+      jest.spyOn(gatewayModel, 'findById').mockImplementation(
+        () =>
+          ({
+            populate: () => ({ lean: () => null }),
+          } as any),
+      );
+
+      jest.spyOn(deviceService, 'findOne').mockResolvedValueOnce({} as any);
+
+      await expect(
+        service.connectDeviceToGateway(gatewayId, deviceId),
+      ).rejects.toThrowError(NotFoundException);
+      expect(gatewayModel.findById).toHaveBeenCalledWith(gatewayId);
+    });
+
+    it('should throw NotFoundException if device is not found', async () => {
+      const gatewayId = 'fake-id';
+      const deviceId = 'fake-id';
+
+      jest
+        .spyOn(service, 'findOne')
+        .mockResolvedValueOnce({ devices: [] } as any);
+      jest.spyOn(deviceService, 'findOne').mockResolvedValueOnce(null);
+
+      await expect(
+        service.connectDeviceToGateway(gatewayId, deviceId),
+      ).rejects.toThrowError(NotFoundException);
+      expect(service.findOne).toHaveBeenCalledWith(gatewayId);
+      expect(deviceService.findOne).toHaveBeenCalledWith(deviceId);
     });
   });
 });

@@ -118,6 +118,8 @@ export class GatewayService {
     const gateway = await this.findOne(gatewayId);
     const device = await this.deviceService.findOne(deviceId);
 
+    if (!device) throw new NotFoundException({ message: 'Device not found' });
+
     const foundDeviceInGatewayDevices = gateway.devices.find(
       (d) => d._id.toString() === device._id.toString(),
     );

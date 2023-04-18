@@ -119,20 +119,30 @@ export const GatewayDetailsScreen: React.FC = () => {
       <div className="flex flex-col sm:flex-row mb-6 gap-4 justify-between items-center">
         <h2 className="text-lg font-bold uppercase">Devices</h2>
         <div className="flex flex-col sm:flex-row gap-2">
-          <button
-            disabled={gateway.devices.length >= 10}
-            onClick={handleDisplayConnectDeviceToGatewayModal}
-            className="btn btn-primary btn-sm"
+          <div
+            className={gateway.devices.length >= 10 ? "tooltip" : ""}
+            data-tip={gateway.devices.length >= 10 ? "Max 10 Devices" : ""}
           >
-            Connect Existing Devices
-          </button>
-          <button
-            disabled={gateway.devices.length >= 10}
-            className="btn btn-primary btn-sm"
-            onClick={handleDisplayAddDeviceToGatewayModal}
+            <button
+              disabled={gateway.devices.length >= 10}
+              onClick={handleDisplayConnectDeviceToGatewayModal}
+              className="btn btn-primary btn-sm"
+            >
+              Connect Existing Devices
+            </button>
+          </div>
+          <div
+            className={gateway.devices.length >= 10 ? "tooltip" : ""}
+            data-tip={gateway.devices.length >= 10 ? "Max 10 Devices" : ""}
           >
-            Add Device To Gateway
-          </button>
+            <button
+              disabled={gateway.devices.length >= 10}
+              className="btn btn-primary btn-sm"
+              onClick={handleDisplayAddDeviceToGatewayModal}
+            >
+              Add Device To Gateway
+            </button>
+          </div>
         </div>
       </div>
       <DevicesList gatewayId={gateway._id} data={gateway.devices} />

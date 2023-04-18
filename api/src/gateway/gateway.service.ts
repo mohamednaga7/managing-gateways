@@ -143,10 +143,21 @@ export class GatewayService {
   async removeDeviceFromGateway(gatewayId: string, deviceId: string) {
     const gateway = await this.findOne(gatewayId);
 
+    if (!gateway) throw new NotFoundException({ message: 'Gateway not found' });
+
+    const device = gateway.devices.find(
+      (d) => d._id.toString() === deviceId.toString(),
+    );
+
+    if (!device)
+      throw new BadRequestException({
+        message: 'Device not connected to gateway',
+      });
+
     const updatedGateway = await this.gatewayModel.updateOne(
       { _id: gateway._id },
       {
-        $pull: { devices: new mongoose.Types.ObjectId(deviceId) },
+        $pull: { devices: device._id },
       },
     );
 
@@ -154,6 +165,8 @@ export class GatewayService {
       throw new BadRequestException({
         message: 'Error removing device from gateway',
       });
+
+    return true;
   }
 
   async findGatewayContainingDevice(deviceId: string) {

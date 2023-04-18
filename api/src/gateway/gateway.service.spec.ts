@@ -368,8 +368,8 @@ describe('GatewayService', () => {
 
   describe('connectDeviceToGateway', () => {
     it('should throw NotFoundException if gateway is not found', async () => {
-      const gatewayId = 'fake-id';
-      const deviceId = 'fake-id';
+      const gatewayId = '6047c547ba6f49053c358fa0';
+      const deviceId = '6047c547ba6f49053c358fa0';
 
       jest.spyOn(gatewayModel, 'findById').mockImplementation(
         () =>
@@ -387,8 +387,8 @@ describe('GatewayService', () => {
     });
 
     it('should throw NotFoundException if device is not found', async () => {
-      const gatewayId = 'fake-id';
-      const deviceId = 'fake-id';
+      const gatewayId = '6047c547ba6f49053c358fa0';
+      const deviceId = '6047c547ba6f49053c358fa0';
 
       jest
         .spyOn(service, 'findOne')
@@ -400,6 +400,62 @@ describe('GatewayService', () => {
       ).rejects.toThrowError(NotFoundException);
       expect(service.findOne).toHaveBeenCalledWith(gatewayId);
       expect(deviceService.findOne).toHaveBeenCalledWith(deviceId);
+    });
+  });
+
+  describe('removeDeviceFromGateway', () => {
+    it('should remove the device from the gateway devices', async () => {
+      const gatewayId = '6047c547ba6f49053c358fa0';
+      const deviceId = '6047c547ba6f49053c358fa3';
+
+      const gateway: Gateway = {
+        _id: '6047c547ba6f49053c358fa0',
+        name: 'Gateway 1',
+        serial: '12345',
+        IPv4: '192.168.0.1',
+        devices: [{ _id: '6047c547ba6f49053c358fa3' } as any],
+      };
+
+      jest.spyOn(service, 'findOne').mockResolvedValueOnce(gateway as any);
+
+      jest.spyOn(gatewayModel, 'updateOne').mockResolvedValueOnce({} as any);
+
+      await service.removeDeviceFromGateway(gatewayId, deviceId);
+
+      expect(gatewayModel.updateOne).toHaveBeenCalledWith(
+        { _id: gateway._id },
+        { $pull: { devices: deviceId } },
+      );
+    });
+
+    it('should throw BadRequestException if the device is not found in the gateway', async () => {
+      const gatewayId = '6047c547ba6f49053c358fa0';
+      const deviceId = 'device-3';
+
+      const gateway: Gateway = {
+        _id: '6047c547ba6f49053c358fa0',
+        name: 'Gateway 1',
+        serial: '12345',
+        IPv4: '192.168.0.1',
+        devices: [],
+      };
+
+      jest.spyOn(service, 'findOne').mockResolvedValueOnce(gateway);
+
+      await expect(
+        service.removeDeviceFromGateway(gatewayId, deviceId),
+      ).rejects.toThrow(BadRequestException);
+    });
+
+    it('should throw NotFoundException if the gateway is not found', async () => {
+      const gatewayId = '6047c547ba6f49053c358fa0';
+      const deviceId = '6047c547ba6f49053c358fa3';
+
+      jest.spyOn(service, 'findOne').mockResolvedValueOnce(null);
+
+      await expect(
+        service.removeDeviceFromGateway(gatewayId, deviceId),
+      ).rejects.toThrow(NotFoundException);
     });
   });
 });
